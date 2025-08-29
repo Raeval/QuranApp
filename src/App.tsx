@@ -3,8 +3,9 @@ import { AppContext } from './context/AppContext';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import type { User } from './utils/Types';
 import DefaultScreen from './screens/DefaultScreen';
-import LogInScreen from './screens/LoggedInScreen';
+import LogInScreen from './screens/LogInScreen';
 import ReadScreen from './screens/ReadScreen';
+import UserScreen from './screens/UserScreen';
 
 function App() {
   const [currUser, setCurrUser] = useState<User | null>(null);
@@ -18,8 +19,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Do for login/not log in */}
-          <Route path="/" element={<ReadScreen />} />
-          <Route path="/loggedUser" element={<LogInScreen />} />
+          <Route path="/" element={<LogInScreen />} />
+          <Route path="/login" element={<LogInScreen />} />
+          <Route path="/loggedUser" element={<UserScreen />} />
           <Route path="/readQuran" element={<ReadScreen />} />
         </Routes>
       </BrowserRouter>

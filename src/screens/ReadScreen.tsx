@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import './css/ReadScreen.css';
-import { BsCheckCircle, BsBookmark, BsBookmarkFill } from "react-icons/bs";
+import { BsCheckCircle, BsBookmark, BsBookmarkFill, BsCheckCircleFill } from "react-icons/bs";
 
 export default function ReadScreen() {
     const [saved, setSaved] = useState(false);
-    const [hovered, setHovered] = useState(false);
+    const [hoveredSaved, setHoveredSaved] = useState(false);
+
+    const [checkpoint, setCheckpoint] = useState(false);
+    const [hoveredCheckpoint, setHoveredCheckpoint] = useState(false);
 
     return (
         <div className="screenContainer">
@@ -28,17 +31,24 @@ export default function ReadScreen() {
                         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ut porttitor est. Nunc maximus eget nisl at suscipit. Nunc venenatis nisl mauris, ut ultrices risus porttitor et.
                     </div>
                     <div className="ayatFooter">
-                    <div
-                        className="bookmark"
-                        onClick={() => setSaved(!saved)}
-                        onMouseEnter={() => setHovered(true)}
-                        onMouseLeave={() => setHovered(false)}
+                      <div
+                          className="bookmark"
+                          onClick={() => setSaved(!saved)}
+                          onMouseEnter={() => setHoveredSaved(true)}
+                          onMouseLeave={() => setHoveredSaved(false)}
+                          style={{ cursor: "pointer" }}
+                          >
+                          {/* Priority: hover > saved */}
+                          {hoveredSaved || saved ? <BsBookmarkFill /> : <BsBookmark />}
+                      </div>
+                      <div className="checkCircle"
+                        onClick={() => setCheckpoint(!checkpoint)}
+                        onMouseEnter={() => setHoveredCheckpoint(true)}
+                        onMouseLeave={() => setHoveredCheckpoint(false)}
                         style={{ cursor: "pointer" }}
                         >
-                        {/* Priority: hover > saved */}
-                        {hovered || saved ? <BsBookmarkFill /> : <BsBookmark />}
-                    </div>
-                        <BsCheckCircle className="checkCircle" />
+                          {hoveredCheckpoint || checkpoint ? <BsCheckCircleFill /> : <BsCheckCircle />}
+                      </div>
                     </div>
                 </div>
             </div>
