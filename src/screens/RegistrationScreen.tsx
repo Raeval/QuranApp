@@ -1,17 +1,19 @@
-import { useState } from "react"
-import './css/LogInScreen.css'
+import { useState } from "react";
+import './css/RegistrationScreen.css';
 
-export default function LogInScreen() {
+export default function RegistrationScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const handleSubmit = () => {
-    
+
   }
 
   return (
-    <div>
-      <div className="logInContainer">
-        <h2>Login</h2>
+    <div className="screenContainer">
+      <div className="registrationContainer">
+        <h2>Registration</h2>
         <form onSubmit={handleSubmit}>
           <div className="formDetail">
             <p className="formText">Username</p>
@@ -35,9 +37,17 @@ export default function LogInScreen() {
               required
             />
           </div>
-          <div className="buttonContainer">
-            <button onClick={handleSubmit} className="submitButton">Submit</button>
-          </div>
+          <div className="formDetail">
+            <p className="formText">Confirm Password</p>
+            <input
+              type="password"
+              placeholder="Confirm Password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="formInput"
+              required
+            />
+            </div>
         </form>
       </div>
     </div>

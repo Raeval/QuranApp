@@ -2,7 +2,7 @@
     background: linear-gradient(135deg, #f0f4f8, #e4ebf2);
 }
 
-.logInContainer {
+.registrationContainer {
     display: flex;
     flex-direction: column;
     position: fixed;
