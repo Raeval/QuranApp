@@ -1,6 +1,6 @@
-import './css/LogInScreen.css';
+import './css/UserScreen.css';
 
-export default function LogInScreen() {
+export default function UserScreen() {
     return (
         <div className="screenContainer">
             <div className="arab-quote">Random Quoteeeeeeee</div>

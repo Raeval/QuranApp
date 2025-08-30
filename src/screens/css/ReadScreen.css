@@ -1,0 +1,73 @@
+.screenContainer {
+    display: flex;
+    flex-direction: row;
+}
+
+.sidebar {
+    padding-top: 40px;
+    padding-left: 20px;
+    border-right: 1px solid rgba(0,0,0,0.2);
+    width: 280px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+}
+
+.back {
+    text-align: right;
+    margin-right: 30px;
+    margin-bottom: 20px;
+    color: rgb(255, 0, 0);
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.back:hover {
+    color: rgb(220, 0, 0);
+}
+
+.back:active {
+    color:rgb(190, 0, 0);
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.ayatContainer {
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    padding: 25px 10px;
+    border-bottom: 1px solid rgba(0,0,0,0.3)
+}
+
+.ayat {
+    font-size: 19px;
+    margin-left: 5%;
+}
+
+.translation {
+    font-size: 17px;
+    font-family: Roboto;
+    font-weight: 200;
+    margin-left: 10%;
+}
+
+.ayatFooter {
+    margin: 5px 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.bookmark, .checkCircle {
+    color: green;
+}
+
+.bookmark:hover, .checkCircle:hover {
+    color: rgb(0, 88, 0);
+}
