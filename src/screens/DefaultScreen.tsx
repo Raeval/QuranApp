@@ -1,6 +1,8 @@
 import './css/DefaultScreen.css';
 
 export default function DefaultScreen() {
+    // TODO: IMPLEMENT GET SESSION HERE TO MAKE SURE USER IS LOGGED IN
+
     return (
         <div className="screenContainer">
             <div className="arab-quote">Random Quoteeeeeeee</div>

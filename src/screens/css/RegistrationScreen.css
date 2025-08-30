@@ -1,5 +1,7 @@
-.screenContainer {
+.screenRegistrationContainer {
     background: linear-gradient(135deg, #f0f4f8, #e4ebf2);
+    height: 100vh;
+    width: 100vw;
 }
 
 .registrationContainer {
@@ -8,7 +10,7 @@
     position: fixed;
     background: #ffffff;
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    width: 35%;
+    width: 450px;
     border-radius: 10px;
     top: 50%;
     left: 50%;
@@ -66,4 +68,18 @@ form {
     border: none;
     border-radius: 10px;
     cursor: pointer;
+}
+
+.loginLinkContainer {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.loginLink {
+    font-style: italic;
+    color: green;
+}
+
+.confirmContainer {
+    margin-bottom: 25px;
 }

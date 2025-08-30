@@ -1,25 +1,36 @@
 import { useState } from "react"
 import './css/LogInScreen.css'
+import { signIn } from "../services/supabaseServices";
+import { useNavigate } from "react-router-dom";
 
 export default function LogInScreen() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = () => {
-    
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const { error } = await signIn(email, password);
+    if (error) {
+      alert(error);
+    } else {
+      alert("successful");
+      navigate("/loggedUser");
+    }
   }
 
   return (
-    <div>
+    <div className="screenLoginContainer">
       <div className="logInContainer">
         <h2>Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="formDetail">
-            <p className="formText">Username</p>
+            <p className="formText">Email</p>
             <input
             type="text"
-            placeholder="Username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="formInput"
             required
           />
@@ -36,7 +47,7 @@ export default function LogInScreen() {
             />
           </div>
           <div className="buttonContainer">
-            <button onClick={handleSubmit} className="submitButton">Submit</button>
+            <button className="submitButton">Submit</button>
           </div>
         </form>
       </div>
