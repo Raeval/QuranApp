@@ -9,8 +9,8 @@ export default function DefaultScreen() {
             <div className="arab-quote">Random Quoteeeeeeee</div>
             <div className="contentContainer">
                 <div className="app-name"><span className="learn">Learn</span><span className="quran">Qur'an</span></div>
-                <Link to="/login"><div className="login">Login</div></Link>
-                <Link to="/register"><div className="register">Register</div></Link>
+                <Link to="/login" className="linkContainer">Login</Link>
+                <Link to="/register" className="linkContainer">Register</Link>
             </div>
         </div>
     )
