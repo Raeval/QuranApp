@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import './css/DefaultScreen.css';
 
 export default function DefaultScreen() {
@@ -8,8 +9,8 @@ export default function DefaultScreen() {
             <div className="arab-quote">Random Quoteeeeeeee</div>
             <div className="contentContainer">
                 <div className="app-name"><span className="learn">Learn</span><span className="quran">Qur'an</span></div>
-                <div className="login">Login</div>
-                <div className="register">Register</div>
+                <Link to="/login"><div className="login">Login</div></Link>
+                <Link to="/register"><div className="register">Register</div></Link>
             </div>
         </div>
     )

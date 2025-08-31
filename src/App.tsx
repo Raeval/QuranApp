@@ -12,9 +12,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           {/* Do for login/not log in */}
-          <Route path="/" element={<RegistrationScreen />} />
+          <Route path="/" element={<DefaultScreen />} />
           <Route path="/login" element={<LogInScreen />} />
-          <Route path="/registration" element={<RegistrationScreen />} />
+          <Route path="/register" element={<RegistrationScreen />} />
           <Route path="/loggedUser" element={<UserScreen />} />
           <Route path="/readQuran" element={<ReadScreen />} />
         </Routes>
