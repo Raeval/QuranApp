@@ -2,11 +2,38 @@
     display: flex;
     flex-direction: row;
     height: 100vh;             
-    overflow: hidden;          
+    overflow: hidden;
+    background-color: rgb(251, 240, 217); 
+}
+
+.readScreenContainer.is-loading .content {
+    visibility: hidden;
+  }
+
+.loadingContainer {
+    display: none;
+}
+
+.readScreenContainer.is-loading .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.loadingSubtitle {
+    margin-top: 10px;
+    font-size: 18px;
+    color: #5C4033;
 }
 
 .sidebar {
     border-right: 1px solid rgba(0,0,0,0.2);
+    background-color: inherit;
     width: 280px;
     flex-shrink: 0;
     display: flex;
@@ -24,13 +51,17 @@
     cursor: pointer;
 }
 
+.sidebarSurah:hover {
+    color: rgb(0, 170, 0);
+}
+
 .selectedSurah {
-    color: green;
+    color: rgb(0, 105, 0);
 }
 
 .sidebarHeader {
     position: sticky;
-    background-color: rgb(243, 242, 242);
+    background-color: inherit;
     z-index: 100;
     top: 0;
     display: flex;
@@ -75,28 +106,30 @@
     display: flex;
     flex-direction: column;
     overflow: auto;
+    height: 100vh;
+}
+
+.surahNameContainer {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgb(251, 240, 217);
 }
 
 .surahName {
-    margin-bottom: 30px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid rgba(0,0,0,0.3);
 }
 
 .ayahContainer {
-    min-height: 180px;
-    height: auto;
     display: flex;
     flex-direction: column;
     row-gap: 10px;
-    padding: 25px 10px;
+    padding: 35px 10px;
+    padding-bottom: 0;
     border-bottom: 1px solid rgba(0,0,0,0.3);
     justify-content: center;
     position: relative;
-    padding-bottom: 60px;
-    box-sizing: border-box;
-}
-
-.firstContainer {
-    border-top: 1px solid rgba(0,0,0,0.3);
 }
 
 .ayah {
@@ -130,21 +163,33 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    margin: 20px 80px;
+    margin-left: 40px;
 }
 
-.bookmark, .checkCircle {
-    position: absolute;
+.iconBtn {
     color: green;
+    background: transparent;
+    cursor: pointer;
 }
 
-.bookmark {
-    right: 70px;
-    bottom: 20px;
+.icon-outline { display: inline; }
+.icon-fill { display: none; }
+
+/* swap on hover or when active (saved/checked) */
+.iconBtn:hover .icon-outline,
+.iconBtn.is-active .icon-outline { 
+    display: none; 
 }
 
-.checkCircle {
-    left: 70px;
-    bottom: 20px;
+.iconBtn:hover .icon-fill,
+.iconBtn.is-active .icon-fill { 
+    display: inline; 
+}
+
+.iconBtn:hover,
+.iconBtn.is-active { 
+    color: rgb(0, 88, 0); 
 }
 
 .bookmark:hover, .checkCircle:hover {

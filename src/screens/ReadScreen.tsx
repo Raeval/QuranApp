@@ -3,27 +3,52 @@ import './css/ReadScreen.css';
 import { BsCheckCircle, BsBookmark, BsBookmarkFill, BsCheckCircleFill } from "react-icons/bs";
 import axios from 'axios';
 import { surahs } from '../utils/surahs';
+import CircularProgress from '@mui/material/CircularProgress';
+import { scrollToTop } from '../utils/scroll';
 
 export default function ReadScreen() {
     // Save and checkpoint button
-    const [saved, setSaved] = useState(false);
-    const [hoveredSaved, setHoveredSaved] = useState(false);
+    const [savedSet, setSavedSet] = useState<Set<number>>(new Set());
+    const [checkpointSet, setCheckpointSet] = useState<Set<number>>(new Set());
 
-    const [checkpoint, setCheckpoint] = useState(false);
-    const [hoveredCheckpoint, setHoveredCheckpoint] = useState(false);
+    // Adds or delete to a set
+    const toggleSaved = (i: number) =>
+        setSavedSet(prev => {
+            const s = new Set(prev);
+            s.has(i) ? s.delete(i) : s.add(i);
+            return s;
+    });
+
+    const toggleCheckpoint = (i: number) =>
+        setCheckpointSet(prev => {
+            const s = new Set(prev);
+            s.has(i) ? s.delete(i) : s.add(i);
+            return s;
+    });
 
     // Data initialisation
     const [surah, setSurah] = useState(4);
     const [surahName, setSurahName] = useState("");
     const [ayahs, setAyahs] = useState([]);
     const [translations, setTranslations] = useState([]);
+    const [loading, setLoading] = useState(true);
     
     const surahList = surahs;
 
     // Get data from API
     useEffect(() => {
-        fetchSurah();
-        fetchTranslation();
+        (async () => {
+            try {
+                setLoading(true);
+                await fetchSurah();
+                await fetchTranslation();
+            } catch (e) {
+                console.error(e);
+            } finally {
+                scrollToTop(".content");
+                setLoading(false);
+            }
+          })();
       }, [surah]);
 
     const fetchSurah = async () => {
@@ -38,7 +63,14 @@ export default function ReadScreen() {
     }
 
     return (
-        <div className="readScreenContainer">
+        <div className={`readScreenContainer ${loading === false ? "" : "is-loading"}`}>
+            <div className={`loadingContainer`}>
+                <CircularProgress 
+                    color="success"
+                    size="70px"
+                />
+                <p className="loadingSubtitle">Loading...</p>
+            </div>
             <div className="sidebar">
                 <div className="sidebarHeader">
                     <div className="sidebarTitle">
@@ -55,16 +87,24 @@ export default function ReadScreen() {
                                     ${idx + 1 === Number(surah) ? "selectedSurah" : ""} 
                                     ${idx === 0 ? "firstSurah" : ""}`
                                 }
-                        onClick={() => setSurah(idx+1)}
+                        onClick={() => {
+                            setSurah(idx+1)
+                        }}
                     >
                         {idx + 1}. {surahName}
                     </div>
                 ))}
             </div>
             <div className="content">
-                <h2 className="surahName">{surahName}</h2>
-                {ayahs.map((ayah, idx) => (
-                    <div key={idx} className={`ayahContainer ${idx === 0 ? "firstContainer" : ""}` }> 
+                <div className="surahNameContainer">
+                    <h2 className="surahName">{surahName}</h2>
+                </div>
+                {ayahs.map((ayah, idx) => {
+                    const isSaved = savedSet.has(idx);
+                    const isChecked = checkpointSet.has(idx);
+                
+                return (
+                    <div key={idx} className={`ayahContainer` }> 
                         <div className="ayah">
                             <span className="ayahNumber">{idx + 1}</span>
                             {ayah}
@@ -74,26 +114,24 @@ export default function ReadScreen() {
                         </div>
                         <div className="ayahFooter">
                             <div
-                                className="bookmark"
-                                onClick={() => setSaved(!saved)}
-                                onMouseEnter={() => setHoveredSaved(true)}
-                                onMouseLeave={() => setHoveredSaved(false)}
+                                className={`iconBtn bookmark ${isSaved ? "is-active" : ""}`}
+                                onClick={() => toggleSaved(idx)}
                                 style={{ cursor: "pointer" }}
-                                >
-                                {/* Priority: hover > saved */}
-                                {hoveredSaved || saved ? <BsBookmarkFill /> : <BsBookmark />}
-                            </div>
-                            <div className="checkCircle"
-                            onClick={() => setCheckpoint(!checkpoint)}
-                            onMouseEnter={() => setHoveredCheckpoint(true)}
-                            onMouseLeave={() => setHoveredCheckpoint(false)}
-                            style={{ cursor: "pointer" }}
                             >
-                                {hoveredCheckpoint || checkpoint ? <BsCheckCircleFill /> : <BsCheckCircle />}
+                                <BsBookmark className="icon-outline" />
+                                <BsBookmarkFill className="icon-fill" />
+                            </div>
+                            <div 
+                                className={`iconBtn checkCircle ${isChecked ? "is-active" : ""}`}
+                                onClick={() => toggleCheckpoint(idx)}
+                                style={{ cursor: "pointer" }}
+                            >
+                                 <BsCheckCircle className="icon-outline" />
+                                 <BsCheckCircleFill className="icon-fill" />
                             </div>
                         </div>
                     </div>
-                ))}
+                )})}
             </div>
         </div>
     )
