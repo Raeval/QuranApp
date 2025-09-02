@@ -126,8 +126,8 @@ export default function ReadScreen() {
                                 onClick={() => toggleCheckpoint(idx)}
                                 style={{ cursor: "pointer" }}
                             >
-                                 <BsCheckCircle className="icon-outline" />
-                                 <BsCheckCircleFill className="icon-fill" />
+                                <BsCheckCircle className="icon-outline" />
+                                <BsCheckCircleFill className="icon-fill" />
                             </div>
                         </div>
                     </div>

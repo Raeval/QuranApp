@@ -14,3 +14,7 @@ export async function signOut() {
     const { error } = await supabase.auth.signOut();
     return { error };
 }
+
+export async function addCheckpoint(surah: number, ayat: number) {
+    const { data } = await supabase.auth;
+}
