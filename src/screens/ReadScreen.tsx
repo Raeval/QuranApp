@@ -5,31 +5,65 @@ import axios from 'axios';
 import { surahs } from '../utils/surahs';
 import CircularProgress from '@mui/material/CircularProgress';
 import { scrollToTop } from '../utils/scroll';
+import { addCheckpoint, addSaved, getCheckpoint, getSaved, removeCheckpoint, removeSaved, replaceCheckpoint, replaceSaved } from '../services/supabaseServices';
+import CheckpointModal from '../components/CheckpointModal';
 
 export default function ReadScreen() {
     // Save and checkpoint button
-    const [savedSet, setSavedSet] = useState<Set<number>>(new Set());
-    const [checkpointSet, setCheckpointSet] = useState<Set<number>>(new Set());
+    const [saved, setSaved] = useState<number>(0);
+    const [checkpoint, setCheckpoint] = useState<number>(0);
+    const [showModal, setShowModal] = useState(false);
+    const [verseReplace, setVerseReplace] = useState(0);
 
-    // Adds or delete to a set
-    const toggleSaved = (i: number) =>
-        setSavedSet(prev => {
-            const s = new Set(prev);
-            s.has(i) ? s.delete(i) : s.add(i);
-            return s;
-    });
+    // Adds or delete to a set and update database
+    // TODO: Fix database error
+    const toggleSaved = (i: number) => {
+        const verseNumber = i + 1;
+        if (saved == 0) {
+            setSaved(verseNumber);
+            addSaved(surah, verseNumber);
+        }
+        else if (verseNumber < saved) {
+            setShowModal(true);
+            // TODO: Remember to include warning in html
+        } else if (verseNumber === saved) {
+            setSaved(0);
+            removeSaved(surah, verseNumber);
+        } else {
+            setSaved(verseNumber);
+            replaceSaved(surah, verseNumber);
+        }
+    };
 
-    const toggleCheckpoint = (i: number) =>
-        setCheckpointSet(prev => {
-            const s = new Set(prev);
-            s.has(i) ? s.delete(i) : s.add(i);
-            return s;
-    });
+    const toggleCheckpoint = (i: number) => {
+        const verseNumber = i + 1;
+        // No checkpoint saved
+        if (checkpoint == 0) {
+            setCheckpoint(verseNumber);
+            addCheckpoint(surah, verseNumber);
+        }
+        else if (verseNumber < checkpoint) {
+            setShowModal(true);
+            // TODO: Remember to include warning in html
+        } else if (verseNumber === checkpoint) {
+            setCheckpoint(0);
+            removeCheckpoint(surah, verseNumber);
+        } else {
+            setCheckpoint(verseNumber);
+            replaceCheckpoint(surah, verseNumber);
+        }
+    };
+
+    const confirmReplace = (i: number) => {
+        setCheckpoint(i);
+        replaceCheckpoint(surah, i);
+        setShowModal(false);
+    }
 
     // Data initialisation
     const [surah, setSurah] = useState(4);
     const [surahName, setSurahName] = useState("");
-    const [ayahs, setAyahs] = useState([]);
+    const [verses, setVerses] = useState([]);
     const [translations, setTranslations] = useState([]);
     const [loading, setLoading] = useState(true);
     
@@ -42,6 +76,8 @@ export default function ReadScreen() {
                 setLoading(true);
                 await fetchSurah();
                 await fetchTranslation();
+                setCheckpoint(await getCheckpoint(surah));
+                setSaved(await getSaved(surah));
             } catch (e) {
                 console.error(e);
             } finally {
@@ -52,9 +88,9 @@ export default function ReadScreen() {
       }, [surah]);
 
     const fetchSurah = async () => {
-        const res = await axios.get(`http://localhost:3000/quran/arabic/${surah}`)
-        setSurahName(res.data.name)
-        setAyahs(res.data.ayahs);
+        const res = await axios.get(`http://localhost:3000/quran/arabic/${surah}`);
+        setSurahName(res.data.name);
+        setVerses(res.data.verses);
     };
 
     const fetchTranslation = async () => {
@@ -62,8 +98,10 @@ export default function ReadScreen() {
         setTranslations(res.data);
     }
 
+    
     return (
-        <div className={`readScreenContainer ${loading === false ? "" : "is-loading"}`}>
+        <div className={`readScreenContainer ${loading === false ? "" : "is-loading"} ${showModal === true ? "show-modal" : ""}`}>
+            {showModal && <CheckpointModal setShowModal={setShowModal} confirmReplace={confirmReplace} verseReplace={verseReplace}/>}
             <div className={`loadingContainer`}>
                 <CircularProgress 
                     color="success"
@@ -80,6 +118,7 @@ export default function ReadScreen() {
                         Home
                     </div>
                 </div>
+                {/* List all the surah names */}
                 {surahList.map((surahName, idx) => (
                     <div 
                         key={idx} 
@@ -96,23 +135,31 @@ export default function ReadScreen() {
                 ))}
             </div>
             <div className="content">
-                <div className="surahNameContainer">
+                    <div className={`surahNameContainer ${checkpoint != 0 ? "is-read" : ""}`}>
                     <h2 className="surahName">{surahName}</h2>
                 </div>
-                {ayahs.map((ayah, idx) => {
-                    const isSaved = savedSet.has(idx);
-                    const isChecked = checkpointSet.has(idx);
+
+                {/* List all the verses in the surah */}
+                {verses.map((verse, idx) => {
+                    const verseNumber = idx + 1;
+                    const isSaved = saved === verseNumber;
+                    const isChecked = checkpoint === verseNumber;
                 
                 return (
-                    <div key={idx} className={`ayahContainer` }> 
-                        <div className="ayah">
-                            <span className="ayahNumber">{idx + 1}</span>
-                            {ayah}
+                    <div key={idx} 
+                        className={`
+                            verseContainer
+                            ${verseNumber <= checkpoint ? "is-read" : ""}
+                        `}
+                    > 
+                        <div className="verse">
+                            <span className="verseNumber">{idx + 1}</span>
+                            {verse}
                         </div>
                         <div className="translation">
                             {translations[idx]}
                         </div>
-                        <div className="ayahFooter">
+                        <div className="verseFooter">
                             <div
                                 className={`iconBtn bookmark ${isSaved ? "is-active" : ""}`}
                                 onClick={() => toggleSaved(idx)}
@@ -123,7 +170,10 @@ export default function ReadScreen() {
                             </div>
                             <div 
                                 className={`iconBtn checkCircle ${isChecked ? "is-active" : ""}`}
-                                onClick={() => toggleCheckpoint(idx)}
+                                onClick={() => {
+                                    toggleCheckpoint(idx);
+                                    setVerseReplace(idx + 1);
+                                }}
                                 style={{ cursor: "pointer" }}
                             >
                                 <BsCheckCircle className="icon-outline" />

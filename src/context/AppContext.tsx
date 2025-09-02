@@ -19,7 +19,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
          // listen to changes
         const { data: sub } = supabase.auth.onAuthStateChange((_e, session) => {
-            console.log(session?.user ?? null);
             setCurrUser(session?.user ?? null);
         });
 

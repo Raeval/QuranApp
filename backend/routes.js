@@ -9,10 +9,10 @@ module.exports.initializeRoutes = (app) => {
         const remoteUrl = `https://api.alquran.cloud/v1/surah/${surah}`
         try {
             const { data } = await axios.get(remoteUrl, {timeout: 8000})
-            const ayahs =  data.data.ayahs.map((ayah) => ayah.text);
+            const verses =  data.data.ayahs.map((ayah) => ayah.text);
             res.json({
               name: data.data.englishName,
-              ayahs: ayahs
+              verses: verses
             });
         } catch (err) {
             if (err.response) {
